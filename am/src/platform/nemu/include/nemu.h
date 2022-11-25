@@ -13,7 +13,7 @@
 #elif defined(__ISA_RISCV32__) || defined(__ISA_RISCV64__)
 # define nemu_trap(code) asm volatile("mv a0, %0; ebreak" : :"r"(code))
 #elif defined(__ISA_LOONGARCH32R__)
-# define nemu_trap(code) asm volatile("move $a0, %0; break 0" : :"r"(code))
+# define nemu_trap(code) asm volatile("move $a0, %0; .word 0xf8000004" : :"r"(code))
 #elif
 # error unsupported ISA __ISA__
 #endif
