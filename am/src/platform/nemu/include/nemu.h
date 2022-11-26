@@ -20,11 +20,18 @@
 
 #if defined(__ARCH_X86_NEMU)
 # define DEVICE_BASE 0x0
+#elif defined(__ISA_LOONGARCH32R__)
+#define DEVICE_BASE 0x1fe00000
 #else
 # define DEVICE_BASE 0xa0000000
 #endif
 
 #define MMIO_BASE 0xa0000000
+
+#define UART_BASE	(DEVICE_BASE + 0x00000000)
+#define UART_TX		0x1000	// Out: Transmit buffer (DLAB=0)
+#define UART_LSR		0x1014	// In:  Line Status Register
+#define UART_LSR_TXRDY	0x20	// Transmit buffer avail
 
 #define SERIAL_PORT     (DEVICE_BASE + 0x00003f8)
 #define KBD_ADDR        (DEVICE_BASE + 0x0000060)
@@ -39,9 +46,9 @@ extern char _pmem_start;
 #define PMEM_SIZE (128 * 1024 * 1024)
 #define PMEM_END  ((uintptr_t)&_pmem_start + PMEM_SIZE)
 #define NEMU_PADDR_SPACE \
-  RANGE(&_pmem_start, PMEM_END), \
-  RANGE(FB_ADDR, FB_ADDR + 0x200000), \
-  RANGE(MMIO_BASE, MMIO_BASE + 0x1000) /* serial, rtc, screen, keyboard */
+	RANGE(&_pmem_start, PMEM_END), \
+	RANGE(FB_ADDR, FB_ADDR + 0x200000), \
+	RANGE(MMIO_BASE, MMIO_BASE + 0x1000) /* serial, rtc, screen, keyboard */
 
 typedef uintptr_t PTE;
 

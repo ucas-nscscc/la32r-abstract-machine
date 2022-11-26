@@ -11,17 +11,18 @@ Area heap = RANGE(&_heap_start, PMEM_END);
 static const char mainargs[] = MAINARGS;
 
 void putch(char ch) {
-  outb(SERIAL_PORT, ch);
+	while (!(inw(UART_BASE + UART_LSR) & UART_LSR_TXRDY)) ;
+	outw(UART_BASE + UART_TX, ch);
 }
 
 void halt(int code) {
-  nemu_trap(code);
+	nemu_trap(code);
 
-  // should not reach here
-  while (1);
+	// should not reach here
+	while (1);
 }
 
 void _trm_init() {
-  int ret = main(mainargs);
-  halt(ret);
+	int ret = main(mainargs);
+	halt(ret);
 }
